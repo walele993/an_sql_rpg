@@ -195,17 +195,3 @@ INSERT INTO enemies (zone_id, enemy_name, is_boss, hp, attack, defense, speed, e
 -- Boss Final (oltre le 10 zone)
 INSERT INTO enemies (zone_id, enemy_name, is_boss, hp, attack, defense, speed, exp_drop, money_drop) VALUES
 (11, 'The World-Eater', TRUE, 5000, 150, 120, 10, 5000, 2000);
-
--- Inserimento dei requisiti di EXP per ogni livello
-INSERT INTO level_requirements (level, exp_required) VALUES
-(1, 0),
-(2, 100),
-(3, 300),
-(4, 600),
-(5, 1000),
-(6, 1500),
-(7, 2100),
-(8, 2800),
-(9, 3600),
-(10, 4500);
-

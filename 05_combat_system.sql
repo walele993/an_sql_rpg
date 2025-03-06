@@ -93,3 +93,80 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE GetRandomEnemy(IN p_character_id INT, IN p_zone_id INT)
+BEGIN
+    DECLARE num_wins INT;
+    DECLARE enemy_count INT;
+    DECLARE random_index INT;
+    
+    -- Conta il numero di vittorie del personaggio nella zona specificata
+    SELECT COUNT(*) INTO num_wins
+    FROM combat c
+    INNER JOIN enemies e ON c.enemy_id = e.enemy_id
+    WHERE c.character_id = p_character_id
+      AND e.zone_id = p_zone_id
+      AND c.result = 'Win';
+    
+    IF num_wins < 5 THEN
+        -- Escludi il boss se il personaggio ha meno di 5 vittorie
+        SELECT COUNT(*) INTO enemy_count
+        FROM enemies
+        WHERE zone_id = p_zone_id AND is_boss = FALSE;
+        
+        IF enemy_count = 0 THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Non ci sono nemici disponibili in questa zona';
+        END IF;
+        
+        SET random_index = FLOOR(RAND() * enemy_count);
+        
+        SELECT * 
+        FROM enemies 
+        WHERE zone_id = p_zone_id AND is_boss = FALSE
+        LIMIT random_index, 1;
+        
+    ELSE
+        -- Include il boss se il personaggio ha almeno 5 vittorie
+        SELECT COUNT(*) INTO enemy_count
+        FROM enemies
+        WHERE zone_id = p_zone_id;
+        
+        IF enemy_count = 0 THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Non ci sono nemici disponibili in questa zona';
+        END IF;
+        
+        SET random_index = FLOOR(RAND() * enemy_count);
+        
+        SELECT * 
+        FROM enemies 
+        WHERE zone_id = p_zone_id
+        LIMIT random_index, 1;
+    END IF;
+END;
+//
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE GetCombatLogForCharacter(IN p_character_id INT)
+BEGIN
+    SELECT 
+        c.combat_id,
+        c.start_time,
+        c.end_time,
+        c.result,
+        e.enemy_name,
+        e.zone_id,
+        IF(e.is_boss, 'Boss', 'Normale') AS enemy_type
+    FROM combat c
+    JOIN enemies e ON c.enemy_id = e.enemy_id
+    WHERE c.character_id = p_character_id
+    ORDER BY c.start_time DESC;
+END;
+//
+
+DELIMITER ;
+

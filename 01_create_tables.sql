@@ -56,8 +56,3 @@ CREATE TABLE enemies (
     FOREIGN KEY (zone_id) REFERENCES zones(zone_id)
 );
 
-CREATE TABLE level_requirements (
-    level INT PRIMARY KEY,
-    exp_required INT NOT NULL
-);
-
