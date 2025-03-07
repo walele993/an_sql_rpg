@@ -1,4 +1,4 @@
-An SQL rpg
+An SQL rpg 
 ==========
 
 Welcome to the **SQL RPG Database**! This is a fun and quirky project designed to simulate a classic RPG (Role-Playing Game) entirely within a SQL database. Whether you're a SQL wizard or just starting your journey, this project is packed with humor, creativity, and a touch of chaos. Dive in and explore a world where **Soggy Slimes**, **Angry Chickens**, and **The World-Eater** await you!
